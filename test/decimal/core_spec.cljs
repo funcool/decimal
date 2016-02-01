@@ -37,7 +37,62 @@
     (t/is (= d3 "10.99999"))
     (t/is (>= d3 "10.99999"))
     (t/is (<= d3 "10.99999"))
+    (t/is (dc/> d2 d1))
+    (t/is (dc/< d1 d3))
+    (t/is (dc/>= d3 "10.99999"))
+    (t/is (dc/<= d3 "10.99999"))
     ))
+
+(def ^:static +test-values+
+  ["0", "-0", "-0.5", "-0.53", "-0.409325859"
+   "0.1", "0.0799", "0.0769104749433424068"])
+
+(t/deftest api-test
+  (doseq [v +test-values+]
+    (t/is (= (dc/abs v) (.abs dc/+decimal+ v)))
+    (t/is (= (dc/finite? v) (.isFinite (dc/-decimal v))))
+    (t/is (= (dc/integer? v) (.isInteger (dc/-decimal v))))
+    (t/is (= (dc/NaN? v) (.isNaN (dc/-decimal v))))
+    (t/is (= (dc/neg? v) (.isNegative (dc/-decimal v))))
+    (t/is (= (dc/pos? v) (.isPositive (dc/-decimal v))))
+    (t/is (= (dc/zero? v) (.isZero (dc/-decimal v))))
+    (t/is (= (dc/< v 0) (.lt (dc/-decimal v) 0)))
+    (t/is (= (dc/<= v 0) (.lte (dc/-decimal v) 0)))
+    (t/is (= (dc/> v 0) (.gt (dc/-decimal v) 0)))
+    (t/is (= (dc/>= v 0) (.gte (dc/-decimal v) 0)))
+    (t/is (= (dc/plus v 1) (.plus (dc/-decimal v) 1)))
+    (t/is (= (dc/minus v 1) (.minus (dc/-decimal v) 1)))
+    (t/is (= (dc/mul v 2) (.times (dc/-decimal v) 2)))
+    (t/is (= (dc/div v 2) (.div (dc/-decimal v) 2)))
+    (t/is (= (dc/floor v) (.floor (dc/-decimal v))))
+    (t/is (= (dc/round v) (.round (dc/-decimal v))))
+    (t/is (= (dc/ceil v) (.ceil (dc/-decimal v))))
+    (t/is (= (dc/sin v) (.sin (dc/-decimal v))))
+    (t/is (= (dc/cos v) (.cos (dc/-decimal v))))
+    (t/is (= (dc/tan v) (.tan (dc/-decimal v))))
+    (t/is (= (dc/asin v) (.asin (dc/-decimal v))))
+    (t/is (= (dc/acos v) (.acos (dc/-decimal v))))
+    (t/is (= (dc/atan v) (.atan (dc/-decimal v))))
+    (t/is (= (dc/sinh v) (.sinh (dc/-decimal v))))
+    (t/is (= (dc/cosh v) (.cosh (dc/-decimal v))))
+    (t/is (= (dc/tanh v) (.tanh (dc/-decimal v))))
+    ;; (t/is (= (dc/asinh v) (.asinh (dc/-decimal v))))
+    ;; (t/is (= (dc/acosh v) (.acosh (dc/-decimal v))))
+    ;; (t/is (= (dc/atanh v) (.atanh (dc/-decimal v))))
+    (t/is (= (dc/cbrt v) (.cubeRoot (dc/-decimal v))))
+    (t/is (= (dc/sqrt v) (.squareRoot (dc/-decimal v))))
+    ;; (t/is (= (dc/log v 2) (.log (dc/-decimal v) 2)))
+    ;; (t/is (= (dc/log2 v) (.log2 dc/+decimal+ v)))
+    ;; (t/is (= (dc/log10 v) (.log10 dc/+decimal+ v)))
+    (t/is (= (dc/mod v 2) (.mod (dc/-decimal v) 2)))
+    ))
+
+;; (t/deftest operations-test
+;;   (t/testing "abs"
+;;     (t/is (= (dc/abs 0) "0"))
+;;     (t/is (= (dc/abs -0) "0"))
+;;     (t/is (= (dc/abs "-0.5") "0.5")))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Entry Point
