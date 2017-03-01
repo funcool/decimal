@@ -1,9 +1,9 @@
 # Contributed Code #
 
-In order to keep *beicon* completely free and unencumbered by copyright, all new
-contributors to the *beicon* code base are asked to dedicate their contributions to
+In order to keep *decimal* completely free and unencumbered by copyright, all new
+contributors to the *decimal* code base are asked to dedicate their contributions to
 the public domain. If you want to send a patch or enhancement for possible inclusion
-in the *beicon* source tree, please accompany the patch with the following
+in the *decimal* source tree, please accompany the patch with the following
 statement:
 
     The author or authors of this code dedicate any and all copyright interest
