@@ -14,13 +14,16 @@
 
   Possible options:
 
-  - `precision`: the maximum number of significant digits of
+  - `precision`: The maximum number of significant digits of
     the result of an operation (integer 1 to 1e+9 inclusive,
     default: 20).
-  - `rounding`: the default rounding mode used when rounding
+  - `rounding`: The default rounding mode used when rounding
     the result of an operation (integer 0 to 8 inclusive,
-  - `modulo`: he modulo mode used when calculating the modulus: `a mod n`.
-    (integer, 0 to 9 inclusive, default 1
+    default: ROUND_HALF_UP).
+  - `modulo`: The modulo mode used when calculating the modulus: `a mod n`.
+    (integer, 0 to 9 inclusive, default: ROWN_DOWN)
+  - `crypto`: The value that determines whether cryptographically-secure
+    pseudo-random number generation is used. (boolean, default: false)
 
   **Rounding modes**
 
@@ -59,7 +62,7 @@
   The underlying library supports more options that and this
   function also accepts. You can read more about here:
   http://mikemcl.github.io/decimal.js/#Dconfig"
-  [{:keys [precision rounding modulo] :as options}]
+  [{:keys [precision rounding modulo crypto] :as options}]
   (.config +decimal+ (clj->js options))
   nil)
 
@@ -176,6 +179,27 @@
        (recur x (first more) (next more))
        (>= x (first more)))
      false)))
+
+(defn ^boolean =
+  "Returns true if the value of this Decimal is equal to the
+  value of x, otherwise returns false."
+  ([v x]
+   (.eq (-decimal v) x))
+  ([v x & more]
+   (if (>= v x)
+     (if (next more)
+       (recur x (first more) (next more))
+       (>= x (first more)))
+     false)))
+
+(defn cmp
+  "Returns 1 if the value of this Decimal is greater than
+  the value of x, -1 if the value of this Decimal is less
+  than the value of x, 0 if the value of Decimal is equal
+  to the value of x and NaN if the value of this Decimal or
+  the value of x is NaN"
+  [v x]
+   (.cmp (-decimal v) x))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Operations
@@ -417,7 +441,7 @@
 ;; Introspection
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn decimal-paces
+(defn decimal-places
   "Returns the number of decimal places, i.e. the number
   of digits after the decimal point, of the value of this Decimal."
   [v]
@@ -507,6 +531,53 @@
   ([v dp] (to-fixed v dp nil))
   ([v dp rm]
    (.toFixed (-decimal v) dp rm)))
+
+(defn to-octal
+  "Returns a string representing the value of this Decimal in
+  octal notation rounded to `sd` significant digits
+  using rounding mode `rm`.
+
+  If `sd` is defined, the return value will use binary
+  exponential notation.
+
+  If `sd` is omitted, the return value will be rounded to
+  `precision` significant digits.
+
+  If `rm` is omitted, rounding mode `rounding` will be used.
+
+  Throws on an invalid `dp` or `rm` value."
+  ([v] (to-octal v nil nil))
+  ([v dp] (to-octal v dp nil))
+  ([v dp rm]
+   (.toOctal (-decimal v) dp rm)))
+
+(defn to-number
+  "Returns the value of this Decimal converted to a primitive number.
+
+  Type coercion with, for example, JavaScript's unary plus operator will also
+  work, except that a Decimal with the value minus zero will convert to
+  positive zero."
+  [v]
+   (.toNumber (-decimal v)))
+
+(defn to-hex
+  "Returns a string representing the value of this Decimal in
+  hexadecimal notation rounded to `sd` significant digits
+  using rounding mode `rm`.
+
+  If `sd` is defined, the return value will use binary
+  exponential notation.
+
+  If `sd` is omitted, the return value will be rounded to
+  `precision` significant digits.
+
+  If `rm` is omitted, rounding mode `rounding` will be used.
+
+  Throws on an invalid `dp` or `rm` value."
+  ([v] (to-hex v nil nil))
+  ([v dp] (to-hex v dp nil))
+  ([v dp rm]
+   (.toHex (-decimal v) dp rm)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Protocols

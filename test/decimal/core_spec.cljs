@@ -66,6 +66,7 @@
     (t/is (= (dc/<= v 0) (.lte (dc/-decimal v) 0)))
     (t/is (= (dc/> v 0) (.gt (dc/-decimal v) 0)))
     (t/is (= (dc/>= v 0) (.gte (dc/-decimal v) 0)))
+    (t/is (= (dc/= v 0) (.eq (dc/-decimal v) 0)))
     (equal-or-both-NaN (dc/plus v 1) (.plus (dc/-decimal v) 1))
     (equal-or-both-NaN (dc/minus v 1) (.minus (dc/-decimal v) 1))
     (equal-or-both-NaN (dc/mul v 2) (.times (dc/-decimal v) 2))
@@ -91,6 +92,7 @@
     (equal-or-both-NaN (dc/log2 v) (.log2 dc/+decimal+ v))
     (equal-or-both-NaN (dc/log10 v) (.log10 dc/+decimal+ v))
     (equal-or-both-NaN (dc/mod v 2) (.mod (dc/-decimal v) 2))
+    (equal-or-both-NaN (dc/cmp v 0) (.cmp (dc/-decimal v) 0))
     ))
 
 ;; (t/deftest operations-test
