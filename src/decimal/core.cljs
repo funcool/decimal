@@ -1,6 +1,6 @@
 (ns decimal.core
   (:require [decimal.extern.decimaljs])
-  (:refer-clojure :exclude [> >= < <= neg? pos? integer? zero? / - + * max min mod]))
+  (:refer-clojure :exclude [> >= < <= neg? pos? integer? zero? = / - + * max min mod]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Constants & Config
@@ -495,7 +495,7 @@
   "Returns a new Decimal whose value is the value of this Decimal
   truncated to a whole number."
   [v]
-  (.truncate (-decimal v)))
+  (.truncated (-decimal v)))
 
 (defn precision
   "Returns the number of significant digits of the value of this Decimal.
@@ -589,20 +589,11 @@
 
   If `rm` is omitted, rounding mode `rounding` will be used.
 
-  Throws on an invalid `dp` or `rm` value."
+  Throws on an invalid `sd` or `rm` value."
   ([v] (to-octal v nil nil))
-  ([v dp] (to-octal v dp nil))
-  ([v dp rm]
-   (.toOctal (-decimal v) dp rm)))
-
-(defn to-number
-  "Returns the value of this Decimal converted to a primitive number.
-
-  Type coercion with, for example, JavaScript's unary plus operator will also
-  work, except that a Decimal with the value minus zero will convert to
-  positive zero."
-  [v]
-   (.toNumber (-decimal v)))
+  ([v sd] (to-octal v sd nil))
+  ([v sd rm]
+   (.toOctal (-decimal v) sd rm)))
 
 (defn to-hex
   "Returns a string representing the value of this Decimal in
@@ -617,11 +608,128 @@
 
   If `rm` is omitted, rounding mode `rounding` will be used.
 
-  Throws on an invalid `dp` or `rm` value."
+  Throws on an invalid `sd` or `rm` value."
   ([v] (to-hex v nil nil))
-  ([v dp] (to-hex v dp nil))
+  ([v sd] (to-hex v sd nil))
+  ([v sd rm]
+   (.toHex (-decimal v) sd rm)))
+
+(defn to-number
+  "Returns the value of this Decimal converted to a primitive number.
+
+  Type coercion with, for example, JavaScript's unary plus operator will also
+  work, except that a Decimal with the value minus zero will convert to
+  positive zero."
+  [v]
+   (.toNumber (-decimal v)))
+
+(defn to-string
+  "Returns a string representing the value of this Decimal.
+
+  If this Decimal has a positive exponent that is equal to or greater than
+  `to-exp-pos`, or a negative exponent equal to or less than `to-exp-neg`, then
+  exponential notation will be returned."
+  [v]
+   (.toString (-decimal v)))
+
+(defn value-of
+  "As toString, but zero is signed."
+  [v]
+   (.valueOf (-decimal v)))
+
+(defn to-precision
+  "Returns a string representing the value of this Decimal in
+  rounded to `sd` significant digits using rounding mode `rm`.
+
+  If `sd` is less than the number of digits necessary to represent the integer
+  part of the value in normal (fixed-point) notation, then exponential notation
+  is used.
+
+  If `sd` is omitted, the return value is the same as to-string.
+
+  If `rm` is omitted, rounding mode `rounding` will be used.
+
+  Throws on an invalid `sd` or `rm` value."
+  ([v] (to-precision v nil nil))
+  ([v sd] (to-precision v sd nil))
+  ([v sd rm]
+   (.toPrecision (-decimal v) sd rm)))
+
+(defn to-significant-digits
+  "Returns a new Decimal whose value is the value of this Decimal rounded to
+  `sd` significant digits using rounding mode `rm`.
+
+  If `sd` is omitted, the return value will be rounded to
+  `precision` significant digits.
+
+  If `rm` is omitted, rounding mode `rounding` will be used.
+
+  Throws on an invalid `sd` or `rm` value."
+  ([v] (to-significant-digits v nil nil))
+  ([v sd] (to-significant-digits v sd nil))
+  ([v sd rm]
+   (.toSignificantDigits (-decimal v) sd rm)))
+
+(defn to-decimal-places
+  "Returns a new Decimal whose value is the value of this Decimal rounded to
+  `dp` decimal places using rounding mode `rm`.
+
+  If `dp` is omitted, the return value will have the same value as this
+  Decimal.
+
+  If `rm` is omitted, rounding mode `rounding` will be used.
+
+  Throws on an invalid `dp` or `rm` value."
+  ([v] (to-decimal-places v nil nil))
+  ([v dp] (to-decimal-places v dp nil))
   ([v dp rm]
-   (.toHex (-decimal v) dp rm)))
+   (.toDecimalPlaces (-decimal v) dp rm)))
+
+(defn to-fraction
+  "Returns an array of two Decimals representing the value of this Decimal as a
+  simple fraction with an integer numerator and an integer denominator. The
+  denominator will be a positive non-zero value less than or equal to
+  `max_denominator`.
+
+  If a maximum denominator is omitted, the denominator will be the lowest value
+  necessary to represent the number exactly.
+
+  Throws on an invalid `max_denominator` value."
+  ([v] (to-fraction v nil))
+  ([v max-denominator]
+   (.toFraction (-decimal v) max-denominator)))
+
+(defn to-power
+  "Returns a new Decimal whose value is the value of this Decimal raised to the
+  power x, rounded to precision significant digits using rounding mode
+  rounding.
+
+  The performance of this method degrades exponentially with increasing digits.
+  For non-integer exponents in particular, the performance of this method may
+  not be adequate."
+  [v x]
+  (.toPower (-decimal v) x))
+
+(defn to-nearest
+  "Returns a new Decimal whose value is the nearest multiple of `x` to the value
+  of this Decimal.
+
+  If the value of this Decimal is equidistant from two multiples of `x`, the
+  rounding mode `rm`, or `rounding` if `rm` is omitted, determines the
+  direction of the nearest.
+
+  In this context, rounding mode `:round-half-up` is interpreted the same as
+  rounding mode `:round-up`, and so on, i.e. the rounding is either up, down,
+  to ceil, to floor or to even.
+
+  The return value will always have the same sign as this Decimal, unless
+  either this Decimal or `x` is `NaN`, in which case the return value will be
+  also be `NaN`.
+
+  The return value is not affected by the value of the `precision` setting."
+  ([v n] (to-nearest v n nil))
+  ([v n rm]
+   (.toNearest (-decimal v) n rm)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Protocols
