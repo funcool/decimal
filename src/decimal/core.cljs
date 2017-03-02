@@ -9,6 +9,25 @@
 (def ^:static +decimal+ (js/Decimal.noConflict))
 (def ^:dynamic *decimal* +decimal+)
 
+(def round-mapping {
+  :round-up 0
+  :round-down 1
+  :round-ceil 2
+  :round-floor 3
+  :round-half-up 4
+  :round-half-down 5
+  :round-half-even 6
+  :round-half-ceil 7
+  :round-half-floor 8
+  :euclid 9})
+
+(def modulo-mapping {
+  :round-up 0
+  :round-down 1
+  :round-floor 3
+  :round-half-even 6
+  :euclid 9})
+
 (defn config!
   "Set the global configuration for the decimal constructor.
 
@@ -19,29 +38,38 @@
     default: 20).
   - `rounding`: The default rounding mode used when rounding
     the result of an operation (integer 0 to 8 inclusive,
-    default: ROUND_HALF_UP).
+    default: :round-half-up).
+  - `min-e`: The negative exponent limit, i.e. the exponent value below
+    which underflow to zero occurs (integer, -9e15 to 0 inclusive, default:
+    -9e15).
+  - `max-e`: The positive exponent limit, i.e. the exponent value above
+    which overflow to Infinity occurs (integer, 0 to 9e15 inclusive, default:
+    9e15).
+  - `to-exp-neg`: The negative exponent value at and below which `toString`
+    returns exponential notation. (integer, -9e15 to 0 inclusive, default: -7)
+  - `to-exp-pos`: The positive exponent value at and above which `toString`
+    returns exponential notation. (integer, 0 to 9e15 inclusive, default: 20)
   - `modulo`: The modulo mode used when calculating the modulus: `a mod n`.
-    (integer, 0 to 9 inclusive, default: ROWN_DOWN)
+    (integer, 0 to 9 inclusive, default: :round-down)
   - `crypto`: The value that determines whether cryptographically-secure
     pseudo-random number generation is used. (boolean, default: false)
 
   **Rounding modes**
 
-  Rounding modes 0 to 6 (inclusive) are the same as those of Java's
-  BigDecimal class.
+  Rounding modes are:
 
-  Property         | Value | Description
-  -----------------|-------|------------
-  ROUND_UP         | 0     | Rounds away from zero
-  ROUND_DOWN       | 1     | Rounds towards zero
-  ROUND_CEIL       | 2     | Rounds towards Infinity
-  ROUND_FLOOR      | 3     | Rounds towards -Infinity
-  ROUND_HALF_UP    | 4     | Rounds towards nearest neighbour. If equidistant, rounds away from zero
-  ROUND_HALF_DOWN  | 5     | Rounds towards nearest neighbour. If equidistant, rounds towards zero
-  ROUND_HALF_EVEN  | 6     | Rounds towards nearest neighbour. If equidistant, rounds towards even neighbour
-  ROUND_HALF_CEIL  | 7     | Rounds towards nearest neighbour. If equidistant, rounds towards Infinity
-  ROUND_HALF_FLOOR | 8     | Rounds towards nearest neighbour. If equidistant, rounds towards -Infinity
-  EUCLID           | 9     | Not a rounding mode, see modulo
+  Keyword           |  Description
+  ------------------|-------------
+  :round-up         |  Rounds away from zero
+  :round-down       |  Rounds towards zero
+  :round-ceil       |  Rounds towards Infinity
+  :round-floor      |  Rounds towards -Infinity
+  :round-half-up    |  Rounds towards nearest neighbour. If equidistant, rounds away from zero
+  :round-half-down  |  Rounds towards nearest neighbour. If equidistant, rounds towards zero
+  :round-half-even  |  Rounds towards nearest neighbour. If equidistant, rounds towards even neighbour
+  :round-half-ceil  |  Rounds towards nearest neighbour. If equidistant, rounds towards Infinity
+  :round-half-floor |  Rounds towards nearest neighbour. If equidistant, rounds towards -Infinity
+  :euclid           |  Not a rounding mode, see modulo
 
   **Modulo modes**
 
@@ -49,29 +77,45 @@
   are shown in the following table. Although the other rounding modes can be used,
   they may not give useful results.
 
-  Property         | Value | Description
-  -----------------|-------|------------
-  ROUND_UP         | 0     | The remainder is positive if the dividend is negative, else is negative
-  ROUND_DOWN       | 1     | The remainder has the same sign as the dividend. This uses truncating division and matches the behaviour of JavaScript's remainder operator %.
-  ROUND_FLOOR      | 3     | The remainder has the same sign as the divisor. (This matches Python's % operator)
-  ROUND_HALF_EVEN  | 6     | The IEEE 754 remainder function
-  EUCLID           | 9     | The remainder is always positive.
+  Keyword           | Description
+  ------------------|------------
+  :round-up         | The remainder is positive if the dividend is negative, else is negative
+  :round-down       | The remainder has the same sign as the dividend. This uses truncating division and matches the behaviour of JavaScript's remainder operator %.
+  :round-floor      | The remainder has the same sign as the divisor. (This matches Python's % operator)
+  :round-half-even  | The IEEE 754 remainder function
+  :euclid           | The remainder is always positive.
 
   **Other options**
 
   The underlying library supports more options that and this
   function also accepts. You can read more about here:
   http://mikemcl.github.io/decimal.js/#Dconfig"
-  [{:keys [precision rounding modulo crypto] :as options}]
-  (.config +decimal+ (clj->js options))
-  nil)
+  [options]
+  (let [final-options {:precision (:precision options 20)
+                       :rounding ((:rounding options :round-half-up) round-mapping)
+                       :modulo ((:modulo options :round-down) modulo-mapping)
+                       :minE (:min-e options -9e15)
+                       :maxE (:max-e options 9e15)
+                       :toExpNeg (:to-exp-neg options -7)
+                       :toExpPos (:to-exp-pos options 20)
+                       :crypto (:crypto options false)}]
+    (.config +decimal+ (clj->js final-options))
+    nil))
 
 (defn config
   "The same as `config` but returns an constructor
   of decimals that can be used for create new instances
   with provided configuration."
   [options]
-  (.clone +decimal+ (clj->js options)))
+  (let [final-options {:precision (:precision options 20)
+                       :rounding ((:rounding options :round-half-up) round-mapping)
+                       :modulo ((:modulo options :round-down) modulo-mapping)
+                       :minE (:min-e options -9e15)
+                       :maxE (:max-e options 9e15)
+                       :toExpNeg (:to-exp-neg options -7)
+                       :toExpPos (:to-exp-pos options 20)
+                       :crypto (:crypto options false)}]
+    (.clone +decimal+ (clj->js final-options))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Protocols & Constructor
