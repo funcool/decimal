@@ -99,7 +99,7 @@
                        :toExpNeg (:to-exp-neg options -7)
                        :toExpPos (:to-exp-pos options 20)
                        :crypto (:crypto options false)}]
-    (.config +decimal+ (clj->js final-options))
+    (.set +decimal+ (clj->js final-options))
     nil))
 
 (defn config
