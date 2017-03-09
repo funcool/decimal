@@ -612,7 +612,7 @@
   ([v] (to-hex v nil nil))
   ([v sd] (to-hex v sd nil))
   ([v sd rm]
-   (.toHex (-decimal v) sd rm)))
+   (.toHexadecimal (-decimal v) sd rm)))
 
 (defn to-number
   "Returns the value of this Decimal converted to a primitive number.
