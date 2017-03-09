@@ -4769,31 +4769,19 @@
 
 
   // Export.
-
-
-  // AMD.
-  if (typeof define == 'function' && define.amd) {
-    define(function () {
-      return Decimal;
-    });
-
-  // Node and other environments that support module.exports.
-  } else if (typeof module != 'undefined' && module.exports) {
-    module.exports = Decimal.default = Decimal.Decimal = Decimal;
-
-  // Browser.
-  } else {
-    if (!globalScope) {
-      globalScope = typeof self != 'undefined' && self && self.self == self
-        ? self : Function('return this')();
-    }
-
-    noConflict = globalScope.Decimal;
-    Decimal.noConflict = function () {
-      globalScope.Decimal = noConflict;
-      return Decimal;
-    };
-
-    globalScope.Decimal = Decimal;
+  if (global) {
+      globalScope = global;
   }
+  if (!globalScope) {
+    globalScope = typeof self != 'undefined' && self && self.self == self
+      ? self : Function('return this')();
+  }
+
+  noConflict = globalScope.Decimal;
+  Decimal.noConflict = function () {
+    globalScope.Decimal = noConflict;
+    return Decimal;
+  };
+
+  globalScope.Decimal = Decimal;
 })(this);
