@@ -285,6 +285,12 @@ Decimal.prototype.isNeg = function() {};
  * @this {Decimal}
  * @return {Boolean}
  */
+Decimal.prototype.isZero = function() {};
+
+/**
+ * @this {Decimal}
+ * @return {Boolean}
+ */
 Decimal.prototype.isPositive = function() {};
 
 /**
