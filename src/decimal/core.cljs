@@ -755,11 +755,6 @@
     (let [t *decimal*]
       (t. v)))
 
-  cljs.core/IPrintWithWriter
-  (-pr-writer [mv writer _]
-    (cljs.core/-write writer "#decimal ")
-    (cljs.core/-write writer (.toString mv)))
-
   cljs.core/IDeref
   (-deref [v]
     (.toNumber v))
