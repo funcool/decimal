@@ -38,95 +38,88 @@ it in the dependency vector on your *_project.clj_* file:
 
 == Use
 
+To start using it you have to require the `decimal.core` namespace.
+
+[source, clojure]
+----
+(require '[decimal.core :as dc])
+----
+
 It accepts a value of type number, string or Decimal.
 
 [source, clojure]
 ----
 (let [x (dc/decimal 123.4567)
-	  y (dc/decimal '123456.7e-3')
+	  y (dc/decimal "123456.7e-3")
 	  z (dc/decimal x)]
   (dc/= x y z))
 ----
 
-A value can also be in binary, hexadecimal or octal if the appropriate prefix is included.
+A value can also be in binary, hexadecimal or octal if the appropriate prefix
+is included.
 
 [source, clojure]
 ----
-(let [x (dc/decimal '0xff.f')
-	  y (dc/decimal '0b10101100')
+(let [x (dc/decimal "0xff.f")
+	  y (dc/decimal "0b10101100")
 	  z (dc/+ x y)]
-  (to-binary z)     ;; '0b110101011.1111'
-  (to-binary z 13)) ;; '0b1.101010111111p+8'
+  (dc/to-binary z)     ;; "0b110101011.1111"
+  (dc/to-binary z 13)) ;; "0b1.101010111111p+8"
 ----
-
-A Decimal is immutable in the sense that it is not changed by its methods.
-
-0.3 - 0.1                     // 0.19999999999999998
-x = new Decimal(0.3)
-x.minus(0.1)                  // '0.2'
-x                             // '0.3'
 
 The methods that return a Decimal can be chained.
 
 [source, clojure]
 ----
-(-> (dc/decimal 10)
-    (dc/divided-by 2)
-    (dc/times 9)
-    (dc/floor)) ;;
+(-> (dc/decimal 11)
+    (dc/div 2)
+    (dc/mul 9)
+    (dc/floor)) ;; #decimal 49
 ----
 
-Many method names have a shorter alias.
-
-x.squareRoot().dividedBy(y).toPower(3).equals(x.sqrt().div(y).pow(3))         // true
-x.cmp(y.mod(z).neg()) == 1 && x.comparedTo(y.modulo(z).negated()) == 1        // true
-Like JavaScript's Number type, there are toExponential, toFixed and toPrecision methods,
-
-x = new Decimal(255.5)
-x.toExponential(5)              // '2.55500e+2'
-x.toFixed(5)                    // '255.50000'
-x.toPrecision(5)                // '255.50'
-
-and almost all of the methods of JavaScript's Math object are also replicated.
+Almost all of the methods of JavaScript's Math object are also replicated.
 
 [source, clojure]
 ----
-(dc/sqrt '6.98372465832e+9823')     ;; '8.3568682281821340204e+4911'
-(dc/pow 2 0.0979843)                ;; '1.0702770511687781839'
+(dc/sqrt "6.98372465832e+9823")     ;; #decimal 8.3568682281821340204e+4911
+(dc/pow 2 0.0979843)                ;; #decimal 1.0702770511687781839
 ----
 
-There are `isNaN?` and `isFinite?` methods, as `NaN` and `Infinity` are valid `Decimal` values,
+There are `NaN?` and `finite?` methods, as `NaN` and `Infinity` are valid `Decimal` values,
 
 [source, clojure]
 ----
-(isNaN? (decimal js/NaN)) ;; true
-(isFinite? (decimal js/Infinity)) ;; false
+(dc/NaN? (dc/decimal js/NaN)) ;; true
+(dc/finite? (dc/decimal js/Infinity)) ;; false
 ----
 
 and a `to-fraction` method with an optional maximum denominator argument
 
 [source, clojure]
 ----
-(let [pi (divided-by (decimal 355) 113)]
-  (to-fraction pi)         ;; [ '7853982301', '2500000000' ]
-  (to-fraction pi 1000)    ;; [ '355', '113' ]
+(let [pi (dc/div (dc/decimal 355) 113)]
+  (dc/to-fraction pi)         ;; [#decimal 31415929203539823009 #decimal 10000000000000000000]
+  (dc/to-fraction pi 1000))   ;; [#decimal 355 #decimal 113]
 ----
 
-All calculations are rounded according to the number of significant digits and rounding mode specified by the precision and rounding properties of the Decimal constructor.
+All calculations are rounded according to the number of significant digits and
+rounding mode specified by the precision and rounding properties of the Decimal
+constructor.
 
-Multiple Decimal constructors can be created, each with their own independent configuration which applies to all Decimal numbers created from it.
+Multiple Decimal constructors can be created, each with their own independent
+configuration which applies to all Decimal numbers created from it.
 
 [source, clojure]
 ----
 ;; Set the precision and rounding of the default Decimal constructor
-(config! {:precision 5 :rounding :round-half-up})
+(dc/config! {:precision 5 :rounding :round-half-up})
 
-// Create another Decimal constructor, optionally passing in a configuration object
-(let [decimal10 (config {:precision 10 :rounding :round-down})
-      x (decimal 5)
+;; Create another Decimal constructor, optionally passing in a configuration object
+(let [decimal10 (dc/config {:precision 10 :rounding :round-down})
+      x (dc/decimal 5)
       y (decimal10 5)]
-  (dc/div x 3)     ;; '1.6667
-  (dc/div y 3))    ;; '1.666666666'
+  (dc/div x 3)     ;; #decimal 1.6667
+  (dc/div y 3))    ;; #decimal 1.666666666
 ----
 
 == Developers Guide
