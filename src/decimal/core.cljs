@@ -99,7 +99,7 @@
                   :toExpNeg (:to-exp-neg options (.-toExpNeg +decimal+))
                   :toExpPos (:to-exp-pos options (.-toExpPos +decimal+))
                   :crypto (:crypto options (.-crypto +decimal+))}]
-    (.set +decimal+ opts)
+    (.set *decimal* opts)
     nil))
 
 (defn config
@@ -136,7 +136,7 @@
 (defn ^boolean decimal?
   "Return true if `v` is a instance of Decimal."
   [v]
-  (instance? +decimal+ v))
+  (instance? *decimal* v))
 
 (defn ^boolean finite?
   "Returns true if the value of this Decimal is a finite
@@ -282,12 +282,12 @@
 (defn max
   "Returns a new Decimal whose value is the maximum."
   [& args]
-  (.apply (.-max +decimal+) +decimal+ (clj->js args)))
+  (.apply (.-max *decimal*) *decimal* (clj->js args)))
 
 (defn min
   "Returns a new Decimal whose value is the minimum."
   [& args]
-  (.apply (.-min +decimal+) +decimal+ (clj->js args)))
+  (.apply (.-min *decimal*) *decimal* (clj->js args)))
 
 ;; Aliases
 
@@ -464,7 +464,7 @@
   "Returns a new Decimal whose value is the square root of the sum
   of the squares of the arguments."
   [& params]
-  (.apply (.-hypot +decimal+) +decimal+ (clj->js params)))
+  (.apply (.-hypot *decimal*) *decimal* (clj->js params)))
 
 (defn neg
   "Returns a new Decimal whose value is the value of this Decimal negated."
@@ -735,7 +735,7 @@
 ;; Protocols
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(extend-type +decimal+
+(extend-type *decimal*
   cljs.core/IEquiv
   (-equiv [v other]
     (.eq v other))
@@ -759,7 +759,7 @@
     (.comparedTo v other)))
 
 (extend-protocol IDecimal
-  +decimal+
+  *decimal*
   (-decimal [v] v)
 
   string
