@@ -91,14 +91,14 @@
   function also accepts. You can read more about here:
   http://mikemcl.github.io/decimal.js/#Dconfig"
   [options]
-  (let [final-options {:precision (:precision options 20)
-                       :rounding ((:rounding options :round-half-up) round-mapping)
-                       :modulo ((:modulo options :round-down) modulo-mapping)
-                       :minE (:min-e options -9e15)
-                       :maxE (:max-e options 9e15)
-                       :toExpNeg (:to-exp-neg options -7)
-                       :toExpPos (:to-exp-pos options 20)
-                       :crypto (:crypto options false)}]
+  (let [final-options {:precision (:precision options (.-precision +decimal+))
+                       :rounding ((:rounding options) round-mapping (.-rounding +decimal+))
+                       :modulo ((:modulo options :round-down) modulo-mapping (.-modulo +decimal+))
+                       :minE (:min-e options (.-minE +decimal+))
+                       :maxE (:max-e options (.-maxE +decimal+))
+                       :toExpNeg (:to-exp-neg options (.-toExpNeg +decimal+))
+                       :toExpPos (:to-exp-pos options (.-toExpPos +decimal+))
+                       :crypto (:crypto options (.-crypto +decimal+))}]
     (.set +decimal+ (clj->js final-options))
     nil))
 
@@ -107,14 +107,14 @@
   of decimals that can be used for create new instances
   with provided configuration."
   [options]
-  (let [final-options {:precision (:precision options 20)
-                       :rounding ((:rounding options :round-half-up) round-mapping)
-                       :modulo ((:modulo options :round-down) modulo-mapping)
-                       :minE (:min-e options -9e15)
-                       :maxE (:max-e options 9e15)
-                       :toExpNeg (:to-exp-neg options -7)
-                       :toExpPos (:to-exp-pos options 20)
-                       :crypto (:crypto options false)}]
+  (let [final-options {:precision (:precision options (.-precision +decimal+))
+                       :rounding ((:rounding options) round-mapping (.-rounding +decimal+))
+                       :modulo ((:modulo options :round-down) modulo-mapping (.-modulo +decimal+))
+                       :minE (:min-e options (.-minE +decimal+))
+                       :maxE (:max-e options (.-maxE +decimal+))
+                       :toExpNeg (:to-exp-neg options (.-toExpNeg +decimal+))
+                       :toExpPos (:to-exp-pos options (.-toExpPos +decimal+))
+                       :crypto (:crypto options (.-crypto +decimal+))}]
     (.clone +decimal+ (clj->js final-options))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -281,13 +281,13 @@
 
 (defn max
   "Returns a new Decimal whose value is the maximum."
-  [v & args]
-  (apply Decimal.max args))
+  [& args]
+  (.apply (.-max +decimal+) +decimal+ (clj->js args)))
 
 (defn min
   "Returns a new Decimal whose value is the minimum."
-  [v & args]
-  (apply Decimal.min args))
+  [& args]
+  (.apply (.-min +decimal+) +decimal+ (clj->js args)))
 
 ;; Aliases
 
@@ -464,7 +464,7 @@
   "Returns a new Decimal whose value is the square root of the sum
   of the squares of the arguments."
   [& params]
-  (apply Decimal.hypot params))
+  (.apply (.-hypot +decimal+) +decimal+ (clj->js params)))
 
 (defn neg
   "Returns a new Decimal whose value is the value of this Decimal negated."
@@ -522,8 +522,8 @@
   If `sd` is specified, the return value will use binary exponential notation.
   If `sd` is omitted, the return value will be rounded to default significant
   digits. If `rm` is omitted, default rounding mode will be used."
-  ([v] (to-binary v nil nil))
-  ([v sd] (to-binary v sd nil))
+  ([v] (to-binary v js/undefined js/undefined))
+  ([v sd] (to-binary v sd js/undefined))
   ([v sd rm]
    (let [v (-decimal v)]
      (.toBinary v sd rm))))
@@ -544,8 +544,8 @@
   If `rm` is omitted, rounding mode rounding is used.
 
   Throws on an invalid `dp` or `rm` value."
-  ([v] (to-exponential v nil nil))
-  ([v dp] (to-exponential v dp nil))
+  ([v] (to-exponential v js/undefined js/undefined))
+  ([v dp] (to-exponential v dp js/undefined))
   ([v dp rm]
    (.toExponential (-decimal v) dp rm)))
 
@@ -571,8 +571,8 @@
   If `rm` is omitted, default rounding mode is used.
 
   Throws on an invalid `dp` or `rm` value."
-  ([v] (to-fixed v nil nil))
-  ([v dp] (to-fixed v dp nil))
+  ([v] (to-fixed v js/undefined js/undefined))
+  ([v dp] (to-fixed v dp js/undefined))
   ([v dp rm]
    (.toFixed (-decimal v) dp rm)))
 
@@ -590,8 +590,8 @@
   If `rm` is omitted, rounding mode `rounding` will be used.
 
   Throws on an invalid `sd` or `rm` value."
-  ([v] (to-octal v nil nil))
-  ([v sd] (to-octal v sd nil))
+  ([v] (to-octal v js/undefined js/undefined))
+  ([v sd] (to-octal v sd js/undefined))
   ([v sd rm]
    (.toOctal (-decimal v) sd rm)))
 
@@ -609,8 +609,8 @@
   If `rm` is omitted, rounding mode `rounding` will be used.
 
   Throws on an invalid `sd` or `rm` value."
-  ([v] (to-hex v nil nil))
-  ([v sd] (to-hex v sd nil))
+  ([v] (to-hex v js/undefined js/undefined))
+  ([v sd] (to-hex v sd js/undefined))
   ([v sd rm]
    (.toHexadecimal (-decimal v) sd rm)))
 
@@ -650,8 +650,8 @@
   If `rm` is omitted, rounding mode `rounding` will be used.
 
   Throws on an invalid `sd` or `rm` value."
-  ([v] (to-precision v nil nil))
-  ([v sd] (to-precision v sd nil))
+  ([v] (to-precision v js/undefined js/undefined))
+  ([v sd] (to-precision v sd js/undefined))
   ([v sd rm]
    (.toPrecision (-decimal v) sd rm)))
 
@@ -665,8 +665,8 @@
   If `rm` is omitted, rounding mode `rounding` will be used.
 
   Throws on an invalid `sd` or `rm` value."
-  ([v] (to-significant-digits v nil nil))
-  ([v sd] (to-significant-digits v sd nil))
+  ([v] (to-significant-digits v js/undefined js/undefined))
+  ([v sd] (to-significant-digits v sd js/undefined))
   ([v sd rm]
    (.toSignificantDigits (-decimal v) sd rm)))
 
@@ -680,8 +680,8 @@
   If `rm` is omitted, rounding mode `rounding` will be used.
 
   Throws on an invalid `dp` or `rm` value."
-  ([v] (to-decimal-places v nil nil))
-  ([v dp] (to-decimal-places v dp nil))
+  ([v] (to-decimal-places v js/undefined js/undefined))
+  ([v dp] (to-decimal-places v dp js/undefined))
   ([v dp rm]
    (.toDecimalPlaces (-decimal v) dp rm)))
 
@@ -695,11 +695,11 @@
   necessary to represent the number exactly.
 
   Throws on an invalid `max_denominator` value."
-  ([v] (to-fraction v nil))
+  ([v] (to-fraction v js/undefined))
   ([v max-denominator]
-   (.toFraction (-decimal v) max-denominator)))
+   (js->clj (.toFraction (-decimal v) max-denominator))))
 
-(defn to-power
+(defn pow
   "Returns a new Decimal whose value is the value of this Decimal raised to the
   power x, rounded to precision significant digits using rounding mode
   rounding.
@@ -727,7 +727,7 @@
   also be `NaN`.
 
   The return value is not affected by the value of the `precision` setting."
-  ([v n] (to-nearest v n nil))
+  ([v n] (to-nearest v n js/undefined))
   ([v n rm]
    (.toNearest (-decimal v) n rm)))
 
