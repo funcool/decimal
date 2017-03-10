@@ -9,24 +9,24 @@
 (def ^:static +decimal+ (js/Decimal.noConflict))
 (def ^:dynamic *decimal* +decimal+)
 
-(def round-mapping {
-  :round-up 0
-  :round-down 1
-  :round-ceil 2
-  :round-floor 3
-  :round-half-up 4
-  :round-half-down 5
-  :round-half-even 6
-  :round-half-ceil 7
-  :round-half-floor 8
-  :euclid 9})
+(def round-mapping
+  {:round-up 0
+   :round-down 1
+   :round-ceil 2
+   :round-floor 3
+   :round-half-up 4
+   :round-half-down 5
+   :round-half-even 6
+   :round-half-ceil 7
+   :round-half-floor 8
+   :euclid 9})
 
-(def modulo-mapping {
-  :round-up 0
-  :round-down 1
-  :round-floor 3
-  :round-half-even 6
-  :euclid 9})
+(def modulo-mapping
+  {:round-up 0
+   :round-down 1
+   :round-floor 3
+   :round-half-even 6
+   :euclid 9})
 
 (defn config!
   "Set the global configuration for the decimal constructor.
@@ -91,15 +91,15 @@
   function also accepts. You can read more about here:
   http://mikemcl.github.io/decimal.js/#Dconfig"
   [options]
-  (let [final-options {:precision (:precision options (.-precision +decimal+))
-                       :rounding ((:rounding options) round-mapping (.-rounding +decimal+))
-                       :modulo ((:modulo options :round-down) modulo-mapping (.-modulo +decimal+))
-                       :minE (:min-e options (.-minE +decimal+))
-                       :maxE (:max-e options (.-maxE +decimal+))
-                       :toExpNeg (:to-exp-neg options (.-toExpNeg +decimal+))
-                       :toExpPos (:to-exp-pos options (.-toExpPos +decimal+))
-                       :crypto (:crypto options (.-crypto +decimal+))}]
-    (.set +decimal+ (clj->js final-options))
+  (let [opts #js {:precision (:precision options (.-precision +decimal+))
+                  :rounding ((:rounding options) round-mapping (.-rounding +decimal+))
+                  :modulo ((:modulo options :round-down) modulo-mapping (.-modulo +decimal+))
+                  :minE (:min-e options (.-minE +decimal+))
+                  :maxE (:max-e options (.-maxE +decimal+))
+                  :toExpNeg (:to-exp-neg options (.-toExpNeg +decimal+))
+                  :toExpPos (:to-exp-pos options (.-toExpPos +decimal+))
+                  :crypto (:crypto options (.-crypto +decimal+))}]
+    (.set +decimal+ opts)
     nil))
 
 (defn config
@@ -107,15 +107,15 @@
   of decimals that can be used for create new instances
   with provided configuration."
   [options]
-  (let [final-options {:precision (:precision options (.-precision +decimal+))
-                       :rounding ((:rounding options) round-mapping (.-rounding +decimal+))
-                       :modulo ((:modulo options :round-down) modulo-mapping (.-modulo +decimal+))
-                       :minE (:min-e options (.-minE +decimal+))
-                       :maxE (:max-e options (.-maxE +decimal+))
-                       :toExpNeg (:to-exp-neg options (.-toExpNeg +decimal+))
-                       :toExpPos (:to-exp-pos options (.-toExpPos +decimal+))
-                       :crypto (:crypto options (.-crypto +decimal+))}]
-    (.clone +decimal+ (clj->js final-options))))
+  (let [opts #js {:precision (:precision options (.-precision +decimal+))
+                  :rounding ((:rounding options) round-mapping (.-rounding +decimal+))
+                  :modulo ((:modulo options :round-down) modulo-mapping (.-modulo +decimal+))
+                  :minE (:min-e options (.-minE +decimal+))
+                  :maxE (:max-e options (.-maxE +decimal+))
+                  :toExpNeg (:to-exp-neg options (.-toExpNeg +decimal+))
+                  :toExpPos (:to-exp-pos options (.-toExpPos +decimal+))
+                  :crypto (:crypto options (.-crypto +decimal+))}]
+    (.clone +decimal+ opts)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Protocols & Constructor
@@ -243,7 +243,7 @@
   to the value of x and NaN if the value of this Decimal or
   the value of x is NaN"
   [v x]
-   (.cmp (-decimal v) x))
+  (.cmp (-decimal v) x))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Operations
@@ -621,7 +621,7 @@
   work, except that a Decimal with the value minus zero will convert to
   positive zero."
   [v]
-   (.toNumber (-decimal v)))
+  (.toNumber (-decimal v)))
 
 (defn to-string
   "Returns a string representing the value of this Decimal.
@@ -630,12 +630,12 @@
   `to-exp-pos`, or a negative exponent equal to or less than `to-exp-neg`, then
   exponential notation will be returned."
   [v]
-   (.toString (-decimal v)))
+  (.toString (-decimal v)))
 
 (defn value-of
   "As toString, but zero is signed."
   [v]
-   (.valueOf (-decimal v)))
+  (.valueOf (-decimal v)))
 
 (defn to-precision
   "Returns a string representing the value of this Decimal in
