@@ -281,13 +281,23 @@
 
 (defn max
   "Returns a new Decimal whose value is the maximum."
-  [& args]
-  (.apply (.-max *decimal*) *decimal* (clj->js args)))
+  ([a] (-decimal a))
+  ([a b]
+   (let [a (-decimal a)
+         b (-decimal b)]
+     (if (> a b) a b)))
+  ([a b & more]
+   (reduce max (max a b) more)))
 
 (defn min
   "Returns a new Decimal whose value is the minimum."
-  [& args]
-  (.apply (.-min *decimal*) *decimal* (clj->js args)))
+  ([a] (-decimal a))
+  ([a b]
+   (let [a (-decimal a)
+         b (-decimal b)]
+     (if (> a b) b a)))
+  ([a b & more]
+   (reduce min (min a b) more)))
 
 ;; Aliases
 
