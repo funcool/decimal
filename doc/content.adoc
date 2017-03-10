@@ -33,7 +33,7 @@ it in the dependency vector on your *_project.clj_* file:
 
 [source,clojure]
 ----
-[funcool/decimal "0.1.0"]
+[funcool/decimal "1.0.0"]
 ----
 
 == Use

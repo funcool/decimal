@@ -1,4 +1,4 @@
-(defproject funcool/decimal "0.1.0"
+(defproject funcool/decimal "1.0.0"
   :description "An arbitrary-precision Decimal type for ClojureScript."
   :url "https://github.com/funcool/decimal"
   :license {:name "BSD (2-Clause)"
@@ -17,4 +17,4 @@
             :src-uri "http://github.com/funcool/decimal/blob/master/"
             :src-uri-prefix "#L"}
 
-  :plugins [[funcool/codeina "0.3.0"]])
+  :plugins [[funcool/codeina "0.5.0"]])
