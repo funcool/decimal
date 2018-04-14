@@ -41,7 +41,9 @@
     (t/is (dc/< d1 d3))
     (t/is (dc/>= d3 "10.99999"))
     (t/is (dc/<= d3 "10.99999"))
-    ))
+
+    (t/is (not (-equiv d1 nil)))))
+
 
 (def ^:static +test-values+
   ["0", "-0", "-0.5", "-0.53", "-0.409325859"
@@ -50,8 +52,8 @@
 (defn equal-or-both-NaN
   [value1 value2]
   (t/is (or
-    (= value1 value2)
-    (and (dc/NaN? value1) (dc/NaN? value2)))))
+         (= value1 value2)
+         (and (dc/NaN? value1) (dc/NaN? value2)))))
 
 (t/deftest api-test
   (doseq [v +test-values+]
@@ -140,8 +142,8 @@
     (t/is (map = (dc/to-fraction v 1) (js->clj (.toFraction (dc/-decimal v) 1))))
     (equal-or-both-NaN (dc/pow v 2) (.toPower (dc/-decimal v) 2))
     (equal-or-both-NaN (dc/to-nearest v 1) (.toNearest (dc/-decimal v) 1))
-    (equal-or-both-NaN (dc/to-nearest v 1 2) (.toNearest (dc/-decimal v) 1 2))
-    ))
+    (equal-or-both-NaN (dc/to-nearest v 1 2) (.toNearest (dc/-decimal v) 1 2))))
+
 
 ;; (t/deftest operations-test
 ;;   (t/testing "abs"

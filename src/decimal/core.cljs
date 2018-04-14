@@ -748,7 +748,8 @@
 (extend-type *decimal*
   cljs.core/IEquiv
   (-equiv [v other]
-    (.eq v other))
+    (and (not= other nil)
+         (.eq v other)))
 
   cljs.core/ICloneable
   (-clone [v]
