@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 1.5.5">
+<meta name="generator" content="Asciidoctor 1.5.6.2">
 <title>decimal - An arbitrary-precision Decimal type for ClojureScript</title>
 <style>
 .listingblock .pygments .hll { background-color: #ffffcc }
@@ -143,7 +143,7 @@ it in the dependency vector on your <strong><em>project.clj</em></strong> file:<
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">[</span><span class="tok-nv">funcool/decimal</span> <span class="tok-s">&quot;1.0.1&quot;</span><span class="tok-p">]</span></code></pre>
+<pre class="pygments highlight"><code data-lang="clojure"><span></span><span class="tok-p">[</span><span class="tok-nv">funcool/decimal</span> <span class="tok-s">&quot;1.0.2&quot;</span><span class="tok-p">]</span></code></pre>
 </div>
 </div>
 </div>
@@ -157,7 +157,7 @@ it in the dependency vector on your <strong><em>project.clj</em></strong> file:<
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">require</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">decimal.core</span> <span class="tok-ss">:as</span> <span class="tok-nv">dc</span><span class="tok-p">])</span></code></pre>
+<pre class="pygments highlight"><code data-lang="clojure"><span></span><span class="tok-p">(</span><span class="tok-nf">require</span> <span class="tok-o">&#39;</span><span class="tok-p">[</span><span class="tok-nv">decimal.core</span> <span class="tok-ss">:as</span> <span class="tok-nv">dc</span><span class="tok-p">])</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -165,7 +165,7 @@ it in the dependency vector on your <strong><em>project.clj</em></strong> file:<
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">let </span><span class="tok-p">[</span><span class="tok-nv">x</span> <span class="tok-p">(</span><span class="tok-nf">dc/decimal</span> <span class="tok-mf">123.4567</span><span class="tok-p">)</span>
+<pre class="pygments highlight"><code data-lang="clojure"><span></span><span class="tok-p">(</span><span class="tok-k">let </span><span class="tok-p">[</span><span class="tok-nv">x</span> <span class="tok-p">(</span><span class="tok-nf">dc/decimal</span> <span class="tok-mf">123.4567</span><span class="tok-p">)</span>
 	  <span class="tok-nv">y</span> <span class="tok-p">(</span><span class="tok-nf">dc/decimal</span> <span class="tok-s">&quot;123456.7e-3&quot;</span><span class="tok-p">)</span>
 	  <span class="tok-nv">z</span> <span class="tok-p">(</span><span class="tok-nf">dc/decimal</span> <span class="tok-nv">x</span><span class="tok-p">)]</span>
   <span class="tok-p">(</span><span class="tok-nf">dc/=</span> <span class="tok-nv">x</span> <span class="tok-nv">y</span> <span class="tok-nv">z</span><span class="tok-p">))</span></code></pre>
@@ -177,7 +177,7 @@ is included.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">let </span><span class="tok-p">[</span><span class="tok-nv">x</span> <span class="tok-p">(</span><span class="tok-nf">dc/decimal</span> <span class="tok-s">&quot;0xff.f&quot;</span><span class="tok-p">)</span>
+<pre class="pygments highlight"><code data-lang="clojure"><span></span><span class="tok-p">(</span><span class="tok-k">let </span><span class="tok-p">[</span><span class="tok-nv">x</span> <span class="tok-p">(</span><span class="tok-nf">dc/decimal</span> <span class="tok-s">&quot;0xff.f&quot;</span><span class="tok-p">)</span>
 	  <span class="tok-nv">y</span> <span class="tok-p">(</span><span class="tok-nf">dc/decimal</span> <span class="tok-s">&quot;0b10101100&quot;</span><span class="tok-p">)</span>
 	  <span class="tok-nv">z</span> <span class="tok-p">(</span><span class="tok-nf">dc/+</span> <span class="tok-nv">x</span> <span class="tok-nv">y</span><span class="tok-p">)]</span>
   <span class="tok-p">(</span><span class="tok-nf">dc/to-binary</span> <span class="tok-nv">z</span><span class="tok-p">)</span>     <span class="tok-c1">;; &quot;0b110101011.1111&quot;</span>
@@ -189,7 +189,7 @@ is included.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nb">-&gt; </span><span class="tok-p">(</span><span class="tok-nf">dc/decimal</span> <span class="tok-mi">11</span><span class="tok-p">)</span>
+<pre class="pygments highlight"><code data-lang="clojure"><span></span><span class="tok-p">(</span><span class="tok-nb">-&gt; </span><span class="tok-p">(</span><span class="tok-nf">dc/decimal</span> <span class="tok-mi">11</span><span class="tok-p">)</span>
     <span class="tok-p">(</span><span class="tok-nf">dc/div</span> <span class="tok-mi">2</span><span class="tok-p">)</span>
     <span class="tok-p">(</span><span class="tok-nf">dc/mul</span> <span class="tok-mi">9</span><span class="tok-p">)</span>
     <span class="tok-p">(</span><span class="tok-nf">dc/floor</span><span class="tok-p">))</span> <span class="tok-c1">;; #decimal 49</span></code></pre>
@@ -200,7 +200,7 @@ is included.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">dc/sqrt</span> <span class="tok-s">&quot;6.98372465832e+9823&quot;</span><span class="tok-p">)</span>     <span class="tok-c1">;; #decimal 8.3568682281821340204e+4911</span>
+<pre class="pygments highlight"><code data-lang="clojure"><span></span><span class="tok-p">(</span><span class="tok-nf">dc/sqrt</span> <span class="tok-s">&quot;6.98372465832e+9823&quot;</span><span class="tok-p">)</span>     <span class="tok-c1">;; #decimal 8.3568682281821340204e+4911</span>
 <span class="tok-p">(</span><span class="tok-nf">dc/pow</span> <span class="tok-mi">2</span> <span class="tok-mf">0.0979843</span><span class="tok-p">)</span>                <span class="tok-c1">;; #decimal 1.0702770511687781839</span></code></pre>
 </div>
 </div>
@@ -209,7 +209,7 @@ is included.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-nf">dc/NaN?</span> <span class="tok-p">(</span><span class="tok-nf">dc/decimal</span> <span class="tok-nv">js/NaN</span><span class="tok-p">))</span> <span class="tok-c1">;; true</span>
+<pre class="pygments highlight"><code data-lang="clojure"><span></span><span class="tok-p">(</span><span class="tok-nf">dc/NaN?</span> <span class="tok-p">(</span><span class="tok-nf">dc/decimal</span> <span class="tok-nv">js/NaN</span><span class="tok-p">))</span> <span class="tok-c1">;; true</span>
 <span class="tok-p">(</span><span class="tok-nf">dc/finite?</span> <span class="tok-p">(</span><span class="tok-nf">dc/decimal</span> <span class="tok-nv">js/Infinity</span><span class="tok-p">))</span> <span class="tok-c1">;; false</span></code></pre>
 </div>
 </div>
@@ -218,7 +218,7 @@ is included.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-p">(</span><span class="tok-k">let </span><span class="tok-p">[</span><span class="tok-nv">pi</span> <span class="tok-p">(</span><span class="tok-nf">dc/div</span> <span class="tok-p">(</span><span class="tok-nf">dc/decimal</span> <span class="tok-mi">355</span><span class="tok-p">)</span> <span class="tok-mi">113</span><span class="tok-p">)]</span>
+<pre class="pygments highlight"><code data-lang="clojure"><span></span><span class="tok-p">(</span><span class="tok-k">let </span><span class="tok-p">[</span><span class="tok-nv">pi</span> <span class="tok-p">(</span><span class="tok-nf">dc/div</span> <span class="tok-p">(</span><span class="tok-nf">dc/decimal</span> <span class="tok-mi">355</span><span class="tok-p">)</span> <span class="tok-mi">113</span><span class="tok-p">)]</span>
   <span class="tok-p">(</span><span class="tok-nf">dc/to-fraction</span> <span class="tok-nv">pi</span><span class="tok-p">)</span>         <span class="tok-c1">;; [#decimal 31415929203539823009 #decimal 10000000000000000000]</span>
   <span class="tok-p">(</span><span class="tok-nf">dc/to-fraction</span> <span class="tok-nv">pi</span> <span class="tok-mi">1000</span><span class="tok-p">))</span>   <span class="tok-c1">;; [#decimal 355 #decimal 113]</span></code></pre>
 </div>
@@ -234,7 +234,7 @@ configuration which applies to all Decimal numbers created from it.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="clojure"><span class="tok-c1">;; Set the precision and rounding of the default Decimal constructor</span>
+<pre class="pygments highlight"><code data-lang="clojure"><span></span><span class="tok-c1">;; Set the precision and rounding of the default Decimal constructor</span>
 <span class="tok-p">(</span><span class="tok-nf">dc/config!</span> <span class="tok-p">{</span><span class="tok-ss">:precision</span> <span class="tok-mi">5</span> <span class="tok-ss">:rounding</span> <span class="tok-ss">:round-half-up</span><span class="tok-p">})</span>
 
 <span class="tok-c1">;; Create another Decimal constructor, optionally passing in a configuration object</span>
@@ -296,7 +296,7 @@ restrictions for contributions. Just open an issue or pull request.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="text">git clone https://github.com/funcool/decimal</code></pre>
+<pre class="pygments highlight"><code data-lang="text"><span></span>git clone https://github.com/funcool/decimal</code></pre>
 </div>
 </div>
 </div>
@@ -308,7 +308,7 @@ restrictions for contributions. Just open an issue or pull request.</p>
 <div class="listingblock">
 <div class="title">ClojureScript</div>
 <div class="content">
-<pre class="pygments highlight"><code data-lang="shell">./scrpts/build
+<pre class="pygments highlight"><code data-lang="shell"><span></span>./scrpts/build
 node ./out/tests.js</code></pre>
 </div>
 </div>
@@ -353,7 +353,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-03-21 19:44:59 CET
+Last updated 2018-04-24 09:06:57 CEST
 </div>
 </div>
 </body>
